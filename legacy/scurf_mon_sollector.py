@@ -78,6 +78,19 @@ DOWN_STATES = set([
     "unknown"
 ])
 
+DOWN_STATES_STRICT = set([
+    "down",
+    "fail",
+    "failing",
+    "future",
+    "maint",
+    "perfctrs",
+    "planned",
+    "power_down",
+    "power_up",
+    "reserved",
+    "unknown"
+])
 
 # ============================================================
 # YAML support
@@ -907,6 +920,7 @@ def get_node_state_stats(nodes):
 
     stats = OrderedDict()
 
+    stats["total"] = 0
     stats["idle"] = 0
     stats["mixed"] = 0
     stats["allocated"] = 0
@@ -915,6 +929,7 @@ def get_node_state_stats(nodes):
 
     for node in nodes:
 
+        stats["total"] += 1
         state = node.get(
             "State",
             ""
@@ -927,7 +942,7 @@ def get_node_state_stats(nodes):
 
         is_down = bool(
             state_tokens.intersection(
-                DOWN_STATES
+                DOWN_STATES_STRICT #DOWN_STATES
             )
         )
 
